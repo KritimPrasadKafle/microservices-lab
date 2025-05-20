@@ -1,3 +1,26 @@
-user_service_env
+# Node.js files
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Python/Django files
+__pycache__/
+*.py[cod]
+*.so
+.Python
+env/
+venv/
+ENV/
+*.sqlite3
+
+# Docker files
 .env
-node_modules
+.env.local
+
+# VS Code
+.vscode/
+
+# Project specific
+/blog_service/node_modules/
+/api_gateway/node_modules/
+/user_service/__pycache__/
