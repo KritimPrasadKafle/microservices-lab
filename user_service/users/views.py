@@ -22,3 +22,4 @@ class UserListView(APIView):
 class Test(APIView):
     def get(self, request):
         print("Testing....")
+        print("Checking...")
