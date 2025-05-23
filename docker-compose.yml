@@ -1,0 +1,73 @@
+version : '3.8'
+
+services:
+  postgres: 
+    image: postgres:16.8
+    container_name: microservices-postgres
+    environment:
+      POSTGRES_DB: blog_users
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports: 
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend
+    
+  mongodb:
+    image: mongo:latest
+    container_name: microservices-mongodb
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - backend
+    
+  user-service:
+    build: ./user_service
+    container_name: microservices-user-service
+    depends_on:
+      - postgres
+    environment:
+      - DB_NAME=blog_users  
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - SECRET_KEY=docker_secre_key_123
+      - DEBUG=True
+    volumes:
+      - ./user_service:/app
+    ports:
+      - "8000:8000"
+    networks: 
+      - backend
+    command: >
+      sh -c "python manage.py migrate &&
+              python manage.py runserver 0.0.0.0:8000"
+
+  blog-service:
+    build: ./blog_service
+    container_name: microservices-blog-service
+    depends_on:
+      - mongodb
+    environment:
+      - DATABASE_URL=mongodb://mongodb:27017/blog_db
+      - PORT=3001
+    volumes:
+      - ./blog_service:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  mongodb_data:
