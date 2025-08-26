@@ -40,7 +40,7 @@ app.use('/api/auth', (req, res, next) => {
     target: process.env.USER_SERVICE_URL,
     changeOrigin: true,
     pathRewrite: {
-      '^/api/auth': '/api' // This is correct but might not be working as expected
+      '^/api/auth': '/api'
     },
     logLevel: 'debug'
   }));
@@ -49,7 +49,7 @@ app.use('/api/blog', createProxyMiddleware({
   target: process.env.BLOG_SERVICE_URL,
   changeOrigin: true,
   pathRewrite: {
-    '^/api/blog': '/api' // Rewrite path
+    '^/api/blog': '/api' 
   }
 }));
 
@@ -102,7 +102,6 @@ app.get('/api/posts-with-authors', async (req, res) => {
   }
 });
 
-// Start server
 app.listen(PORT, () => {
   console.log(`API Gateway running on port ${PORT}`);
 });
